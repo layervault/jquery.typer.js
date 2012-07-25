@@ -30,6 +30,56 @@
 
     <div class="container">
       <section id="main_content">
+        <h3>Usage</h3>
+
+        <p>jquery.typer.js can be used one of two ways:</p>
+
+        <h4>Type once with <code>typeTo()</code></h4>
+
+        <p>If you just want to use the effect once, you should use <code>typeTo()</code>. It can be used as follows:</p>
+
+        <pre><code>$('h3').typeTo("New Text");</code></pre>
+
+        <p>This will do a one-time transition.</p>
+
+        <h4>Type indefinitely with <code>typer()</code></h4>
+
+        <p>Now let's say you want to loop over a set of strings for the typing effect. Easy!</p>
+
+        <pre><code> $('[data-typer-targets]').typer() </code></pre>
+
+        <p>That code will start the effect on all elements with the <code>data-typer-targets</code> attribute.</p>
+
+        <p>You obviously need to supply it with some source data. The <code>data-typer-targets</code> attribute can be
+        either a comma-separated string or a piece of JSON.</p>
+
+        <h3>Customize</h3>
+
+        <p>There are a few options that you can customize.</p>
+
+        <pre><code>  $.typer.options = {
+      highlightSpeed    : 20,
+      typeSpeed         : 100,
+      clearDelay        : 500,
+      typeDelay         : 200,
+      clearOnHighlight  : true,
+      typerDataAttr     : 'data-typer-targets',
+      typerInterval     : 2000
+  };</code></pre>
+
+        <p>Set them individually:</p>
+
+        <pre><code>  $.typer.options.highlightSpeed = 1000; </code></pre>
+
+        <p>Or as a whole:</p>
+
+        <pre><code>  $.typer.options = {
+      typeSpeed: 10,
+      typerDataAttr: 'data-values'
+  }; </code></pre>
+
+        <p>Options must be set before invoking <code>typer()</code> or <code>typeTo()</code></p>
+
         <h3>Created by <a href="http://grinshtein.com">Allan Grinshtein</a> and <a href="http://kellysutton.com">Kelly Sutton</a> of <a href="http://layervault.com">LayerVault</a>.</h3>
         <h3>Released under the MIT license.</h3>
       </section>

@@ -1,11 +1,13 @@
 (function($) {
   var
     options = {
-      highlightSpeed: 20,
-      typeSpeed: 100,
-      clearDelay: 500,
-      typeDelay: 200,
-      clearOnHighlight: true
+      highlightSpeed    : 20,
+      typeSpeed         : 100,
+      clearDelay        : 500,
+      typeDelay         : 200,
+      clearOnHighlight  : true,
+      typerDataAttr     : 'data-typer-targets',
+      typerInterval     : 2000
     },
     highlight,
     clearText,
@@ -15,23 +17,8 @@
     clearDelay,
     typeDelay,
     clearData,
-    isNumber;
-
-  getHighlightInterval = function () {
-    return options.highlightSpeed;
-  };
-
-  getTypeInterval = function () {
-    return options.typeSpeed;
-  },
-
-  clearDelay = function () {
-    return options.clearDelay;
-  },
-
-  typeDelay = function () {
-    return options.typeDelay;
-  }
+    isNumber,
+    typeWithAttribute;
 
   spanWithColor = function(color, backgroundColor) {
     if (color === 'rgba(0, 0, 0, 0)') {
@@ -54,7 +41,8 @@
       .data('stopAt',             null)
       .data('primaryColor',       null)
       .data('backgroundColor',    null)
-      .data('text',               null);
+      .data('text',               null)
+      .data('typing',             null);
   };
 
   type = function ($e) {
@@ -125,8 +113,39 @@
     }, getHighlightInterval());
   };
 
-  $.fn.typer = function() {
+  typeWithAttribute = function ($e) {
+    var targets;
 
+    if ($e.data('typing')) {
+      return;
+    }
+
+    try {
+      targets = JSON.parse($e.attr(options.typerDataAttr));
+    } catch (e) {}
+
+    if (typeof targets === "undefined") {
+      targets = $.map($e.attr(options.typerDataAttr).split(','), function (e) {
+        return $.trim(e);
+      });
+    }
+
+    $e.typeTo(targets[Math.floor(Math.random()*targets.length)]);
+  };
+
+  //-- Methods to attach to jQuery sets
+
+  $.fn.typer = function() {
+    var $e = $(this);
+
+    if (typeof $e.attr(options.typerDataAttr) === "undefined") {
+      return;
+    }
+
+    typeWithAttribute($e);
+    setInterval(function () {
+      typeWithAttribute($e);
+    }, typerInterval());
   };
 
   $.fn.typeTo = function (newString) {
@@ -135,10 +154,17 @@
       currentText = $e.text(),
       i = 0;
 
+    if (currentText === newString) {
+      console.log("Our strings our equal, nothing to type");
+      return;
+    }
+
     if (currentText !== $e.html()) {
       console.error("Typer does not work on elements with child elements.");
       return;
     }
+
+    $e.data('typing', true);
 
     while (currentText.charAt(i) === newString.charAt(i)) {
       i++;
@@ -149,5 +175,27 @@
     $e.data('backgroundColor', $e.css('background-color'));
     $e.data('text', newString);
     highlight($e);
+  };
+
+  //-- Helper methods. These can one day be customized further to include things like ranges of delays.
+
+  getHighlightInterval = function () {
+    return options.highlightSpeed;
+  };
+
+  getTypeInterval = function () {
+    return options.typeSpeed;
+  },
+
+  clearDelay = function () {
+    return options.clearDelay;
+  },
+
+  typeDelay = function () {
+    return options.typeDelay;
+  };
+
+  typerInterval = function () {
+    return options.typerInterval;
   };
 })(jQuery);

@@ -18,7 +18,10 @@
     typeDelay,
     clearData,
     isNumber,
-    typeWithAttribute;
+    typeWithAttribute,
+    getHighlightInterval,
+    getTypeInterval,
+    typerInterval;
 
   spanWithColor = function(color, backgroundColor) {
     if (color === 'rgba(0, 0, 0, 0)') {
@@ -121,11 +124,11 @@
     }
 
     try {
-      targets = JSON.parse($e.attr(options.typerDataAttr));
+      targets = JSON.parse($e.attr($.typer.options.typerDataAttr));
     } catch (e) {}
 
     if (typeof targets === "undefined") {
-      targets = $.map($e.attr(options.typerDataAttr).split(','), function (e) {
+      targets = $.map($e.attr($.typer.options.typerDataAttr).split(','), function (e) {
         return $.trim(e);
       });
     }
@@ -133,12 +136,21 @@
     $e.typeTo(targets[Math.floor(Math.random()*targets.length)]);
   };
 
+  // Expose our options to the world.
+  $.typer = function () {
+    return {};
+  };
+
+  $.extend($.typer, {
+    options: options
+  });
+
   //-- Methods to attach to jQuery sets
 
   $.fn.typer = function() {
     var $e = $(this);
 
-    if (typeof $e.attr(options.typerDataAttr) === "undefined") {
+    if (typeof $e.attr($.typer.options.typerDataAttr) === "undefined") {
       return;
     }
 
@@ -180,22 +192,22 @@
   //-- Helper methods. These can one day be customized further to include things like ranges of delays.
 
   getHighlightInterval = function () {
-    return options.highlightSpeed;
+    return $.typer.options.highlightSpeed;
   };
 
   getTypeInterval = function () {
-    return options.typeSpeed;
+    return $.typer.options.typeSpeed;
   },
 
   clearDelay = function () {
-    return options.clearDelay;
+    return $.typer.options.clearDelay;
   },
 
   typeDelay = function () {
-    return options.typeDelay;
+    return $.typer.options.typeDelay;
   };
 
   typerInterval = function () {
-    return options.typerInterval;
+    return $.typer.options.typerInterval;
   };
 })(jQuery);

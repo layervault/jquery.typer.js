@@ -38,7 +38,10 @@ There are some options that are available to you as well:
   typerDataAttr     : 'data-typer-targets',
   typerInterval     : 2000
 }
+```
 
-// Set the options individually
+Set the options individually:
+
+```javascript
 $.typer.options.highlightSpeed = 500;
 ```

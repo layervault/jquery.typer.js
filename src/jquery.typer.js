@@ -137,9 +137,9 @@
   };
 
   // Expose our options to the world.
-  $.typer = function () {
-    return {};
-  };
+  $.typer = (function () {
+    return { options: options };
+  })();
 
   $.extend($.typer, {
     options: options

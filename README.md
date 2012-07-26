@@ -5,7 +5,9 @@ jquery.typer.js can be used one of two ways:
 
 If you just want to use the effect once, use `typeTo()`. It can be used as follows:
 
-    $('h3').typeTo("New Text");
+```javascript
+$('h3').typeTo("New Text");
+```
 
 This will do a one-time transition.
 
@@ -13,8 +15,9 @@ This will do a one-time transition.
 
 Now let's say you want to loop over a set of strings for the typing effect. Easy!
 
-    $('[data-typer-targets]').typer();
-
+```javascript
+$('[data-typer-targets]').typer();
+```
 
 That code will start the effect on all elements with the `data-typer-targets` attribute.
 

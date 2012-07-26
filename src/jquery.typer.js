@@ -1,3 +1,15 @@
+String.prototype.rightChars = function(n){
+  if (n <= 0) {
+    return "";
+  }
+  else if (n > this.length) {
+    return this;
+  }
+  else {
+    return this.substring(this.length, this.length - n);
+  }
+};
+
 (function($) {
   var
     options = {
@@ -41,7 +53,8 @@
     $e
       .data('typePosition',       null)
       .data('highlightPosition',  null)
-      .data('stopAt',             null)
+      .data('leftStop',           null)
+      .data('rightStop',          null)
       .data('primaryColor',       null)
       .data('backgroundColor',    null)
       .data('text',               null)
@@ -50,21 +63,32 @@
 
   type = function ($e) {
     var
-      position = $e.data('typePosition'),
-      text = $e.data('text');
+      // position = $e.data('typePosition'),
+      text = $e.data('text'),
+      oldLeft = $e.data('oldLeft'),
+      oldRight = $e.data('oldRight');
 
-    if (!isNumber(position)) {
-      position = $e.data('stopAt');
-    }
+    // if (!isNumber(position)) {
+      // position = $e.data('leftStop');
+    // }
 
-    if (position >= text.length) {
+    if (!text || text.length === 0) {
       clearData($e);
       return;
     }
 
-    $e.text($e.text() + text.substring(position, position + 1));
 
-    $e.data('typePosition', position + 1);
+    $e.text(
+      oldLeft +
+      text.charAt(0) +
+      oldRight
+    );
+
+    $e.data('oldLeft', oldLeft + text.charAt(0));
+    $e.data('text', text.substring(1));
+    // $e.text($e.text() + text.substring(position, position + 1));
+
+    // $e.data('typePosition', position + 1);
 
     setTimeout(function () {
       type($e);
@@ -82,32 +106,35 @@
   highlight = function ($e) {
     var
       position = $e.data('highlightPosition'),
-      plainText,
-      highlightedText;
+      leftText,
+      highlightedText,
+      rightText;
 
     if (!isNumber(position)) {
-      position = $e.text().length;
+      position = $e.data('rightStop') + 1;
     }
 
-    if (position <= $e.data('stopAt')) {
+    if (position <= $e.data('leftStop')) {
       setTimeout(function () {
         clearText($e);
       }, clearDelay());
       return;
     }
 
-    plainText = $e.text().substring(0, position - 1);
-    highlightedText = $e.text().substring(position - 1);
+    leftText = $e.text().substring(0, position - 1);
+    highlightedText = $e.text().substring(position - 1, $e.data('rightStop') + 1);
+    rightText = $e.text().substring($e.data('rightStop') + 1);
 
-    $e.html(plainText);
-
-    $e.append(
-      spanWithColor(
-          $e.data('backgroundColor'),
-          $e.data('primaryColor')
-        )
-        .append(highlightedText)
-    );
+    $e.html(leftText);
+    $e
+      .append(
+        spanWithColor(
+            $e.data('backgroundColor'),
+            $e.data('primaryColor')
+          )
+          .append(highlightedText)
+      )
+      .append(rightText);
 
     $e.data('highlightPosition', position - 1);
 
@@ -164,7 +191,8 @@
     var
       $e = $(this),
       currentText = $e.text(),
-      i = 0;
+      i = 0,
+      j = 0;
 
     if (currentText === newString) {
       console.log("Our strings our equal, nothing to type");
@@ -182,7 +210,16 @@
       i++;
     }
 
-    $e.data('stopAt', i);
+    while (currentText.rightChars(j) === newString.rightChars(j)) {
+      j++;
+    }
+
+    newString = newString.substring(i, newString.length - j + 1);
+
+    $e.data('oldLeft', currentText.substring(0, i));
+    $e.data('oldRight', currentText.rightChars(j - 1));
+    $e.data('leftStop', i);
+    $e.data('rightStop', currentText.length - j);
     $e.data('primaryColor', $e.css('color'));
     $e.data('backgroundColor', $e.css('background-color'));
     $e.data('text', newString);

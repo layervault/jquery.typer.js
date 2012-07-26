@@ -175,16 +175,20 @@ String.prototype.rightChars = function(n){
   //-- Methods to attach to jQuery sets
 
   $.fn.typer = function() {
-    var $e = $(this);
+    var $elements = $(this);
 
-    if (typeof $e.attr($.typer.options.typerDataAttr) === "undefined") {
-      return;
-    }
+    $elements = $elements.filter(function () {
+      return typeof $(this).attr($.typer.options.typerDataAttr) !== "undefined"
+    });
 
-    typeWithAttribute($e);
-    setInterval(function () {
+    $elements.each(function () {
+      var $e = $(this);
+
       typeWithAttribute($e);
-    }, typerInterval());
+      setInterval(function () {
+        typeWithAttribute($e);
+      }, typerInterval());
+    });
   };
 
   $.fn.typeTo = function (newString) {

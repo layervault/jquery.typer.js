@@ -151,7 +151,7 @@ String.prototype.rightChars = function(n){
     }
 
     try {
-      targets = JSON.parse($e.attr($.typer.options.typerDataAttr));
+      targets = JSON.parse($e.attr($.typer.options.typerDataAttr)).targets;
     } catch (e) {}
 
     if (typeof targets === "undefined") {

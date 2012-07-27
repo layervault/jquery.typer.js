@@ -45,3 +45,8 @@ Set the options individually:
 ```javascript
 $.typer.options.highlightSpeed = 500;
 ```
+## About
+
+jquery.typer.js was originally developed for [LayerVault](http://layervault.com) by [Kelly Sutton](http://kellysutton.com).
+
+You can see more projects from LayerVault in the [LayerVault Cosmos](http://cosmos.layervault.com).
